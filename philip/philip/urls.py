@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 
 admin.site.site_title = 'ADMIN'
@@ -24,4 +24,5 @@ admin.site.index_title = 'テーブル一覧'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('sns/', include('sns.urls')),
 ]
