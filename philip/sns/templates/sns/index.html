@@ -19,7 +19,7 @@
   </form>
 
   <hr>
-  <div>※グループのチェックをつけて更新すると、そのグループに登録されている利用者のメッセージだけが表示されます</div>
+  <div>※Groupのチェックをつけて更新すると、そのグループに登録されている利用者のメッセージだけが表示されます</div>
   <form action="{% url 'index' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__check_form__">

@@ -232,7 +232,7 @@ def post(request):
         group_entity = Group.objects.filter(owner=request.user).filter(title=group_name).first()
 
         if group_entity == None:
-            (public_user, public_group) = util.get_public()
+            (public_user, group_entity) = util.get_public()
 
         # Messageを作成し、設定して保存
         message_entity = Message()
