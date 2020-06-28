@@ -113,8 +113,7 @@ def groups(request):
         if request.POST['mode'] == '__friends_form__':
 
             # 選択したGroupの取得
-#             select_group = request.POST['group']
-            select_group = request.POST['groups']
+            select_group = request.POST['group']
             group_entity = Group.objects.filter(title=select_group).first()
 
             # チェックしたFriendsを取得
@@ -123,7 +122,7 @@ def groups(request):
             # Friendsのユーザを取得
             select_users = User.objects.filter(username__in=select_friends)
 
-            # userのリストに含まれるユーザが登録したFriendを取得
+            # Userのリストに含まれるユーザが登録したFriendを取得
             fds = Friend.objects.filter(owner=request.user).filter(user__in=select_users)
 
             # すべてのFriendにGroupを設定し保存する

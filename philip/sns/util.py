@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from sns.models import Group, Friend, Message
 from django.db.models.query_utils import Q
 
+
 def get_public():
     public_user = User.objects.filter(username='public').first()
     public_group = Group.objects.filter(owner=public_user).first()
@@ -38,7 +39,7 @@ def get_your_group_message(owner, group_list, find=None):
     for entity in user_friend_entity_list:
         groups.append(entity.group)
 
-    # groupがgroup_entity_listに含まれるか、groupsに含まれるMessageの取得
+    # Groupがgroup_entity_listに含まれるか、Groupに含まれるMessageの取得
     if find == None:
         message_entity_list = Message.objects.filter(Q(group__in=group_entity_list) \
                                                      | Q(group__in=groups))[:100]
