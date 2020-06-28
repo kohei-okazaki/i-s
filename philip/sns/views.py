@@ -89,7 +89,7 @@ def groups(request):
     if request.method == 'POST':
 
         # Groupメニュー選択肢の処理
-        if request.POST['mode'] == '__group_form__':
+        if request.POST['mode'] == '__groups_form__':
 
             # 選択したGroup名を取得
             select_group = request.POST['groups']
@@ -113,7 +113,7 @@ def groups(request):
         if request.POST['mode'] == '__friends_form__':
 
             # 選択したGroupの取得
-            select_group = request.POST['group']
+            select_group = request.POST['groups']
             group_entity = Group.objects.filter(title=select_group).first()
 
             # チェックしたFriendsを取得
@@ -156,7 +156,7 @@ def groups(request):
         'group': select_group,
     }
 
-    return render(request, 'sns/group.html', params)
+    return render(request, 'sns/groups.html', params)
 
 
 @login_required(login_url='/admin/login/')
