@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <title>{% block title %}{% endblock %}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/layout.css' %}" />
 </head>
 <body>
 
@@ -32,13 +33,13 @@
       <div class="row">
         <div class="col-xs-4">
           <div class="list-group">
-            <a href="{% url 'index' %}" class="list-group-item nok-list-menu-item">Top</a>
-            <a href="{% url 'post' %}" class="list-group-item nok-list-menu-item">投稿</a>
-            <a href="{% url 'groups' %}" class="list-group-item nok-list-menu-item">グループ管理</a>
+            <a href="{% url 'index' %}" class="list-group-item sns-list-menu-item">Top</a>
+            <a href="{% url 'post' %}" class="list-group-item sns-list-menu-item">投稿</a>
+            <a href="{% url 'groups' %}" class="list-group-item sns-list-menu-item">グループ管理</a>
           </div><!-- /.list-group -->
         </div><!-- /.col-xs-4 -->
         <div class="col-xs-8">
-          <section class="content">
+          <section class="main-content">
             <!-- 各画面個別で差し替えるエリア -->
             {% block content %}{% endblock %}
           </section><!-- /.content -->

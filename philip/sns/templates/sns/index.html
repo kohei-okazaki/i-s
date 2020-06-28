@@ -3,6 +3,14 @@
 {% block title %}Index画面{% endblock %}
 
 {% block content %}
+
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{message}}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
   <form action="{% url 'index' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__search_form__">
@@ -11,7 +19,7 @@
   </form>
 
   <hr>
-
+  <div>※グループのチェックをつけて更新すると、そのグループに登録されている利用者のメッセージだけが表示されます</div>
   <form action="{% url 'index' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__check_form__">
