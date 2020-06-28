@@ -22,7 +22,7 @@ class MessageDao:
         # 登録成功時にTrueを返す
         return True
 
-    def good_increment(self, message):
+    def increment(self, message):
         '''
         MESSAGEのgood_countの件数を1件増やす
         @param message: MESSAGE

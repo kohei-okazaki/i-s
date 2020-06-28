@@ -118,7 +118,7 @@ def groups(request):
             # 選択したGroupの取得
             select_group = request.POST['group']
             print("select_group->" + str(select_group))
-            group_entity = GroupDao().select_list_by_title().first()
+            group_entity = GroupDao().select_list_by_title(select_group).first()
 
             # チェックしたFriendsを取得
             select_friends = request.POST.getlist('friends')
