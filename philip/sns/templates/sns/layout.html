@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8">
 <title>{% block title %}{% endblock %}</title>
+<link rel="icon" href="{% static 'icon/queue.png' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/layout.css' %}" />
 </head>
 <body>
-
 
   <!-- ヘッダー -->
   <header class="sticky-top header-contents">
@@ -48,5 +48,8 @@
     </div><!-- /.content-wrapper -->
   </div><!-- /.content -->
 
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

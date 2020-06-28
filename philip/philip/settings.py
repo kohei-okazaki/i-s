@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # add
     'sns',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

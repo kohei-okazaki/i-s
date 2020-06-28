@@ -1,0 +1,46 @@
+{% extends 'sns/layout.html' %}
+
+{% block title %}グループ管理画面{% endblock %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+  <div>Groupを選択して「メンバーを選択する」を押すと、そのGroupに登録されている利用者がONになります</div>
+  <div>利用者のチェックをONにして「メンバーを設定する」を押すと、ONにしてある利用者がGroupに追加されます</div>
+  <br>
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li><div class="alert alert-info" role="alert">{{message}}</div></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <br>
+  <form action="{% url 'groups' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="mode" value="__groups_form__">
+    {{groups_form}}
+    <input class="btn btn-primary" type="submit" value="メンバーを選択する" />
+  </form>
+
+  <hr>
+
+  <form action="{% url 'groups' %}" method="post">
+    {% csrf_token %}
+    {{friends_form}}
+    <input type="hidden" name="mode" value="__friends_form__">
+    <input type="hidden" name="groups" value="{{groups}}">
+    <input class="btn btn-primary" type="submit" value="メンバーを設定する" />
+  </form>
+
+  <hr>
+
+  <div>※新しいGroupの登録</div>
+  <form action="{% url 'creategroup' %}" method="post">
+    {% csrf_token %}
+    {{create_form}}
+    <input class="btn btn-primary" type="submit" value="グループを作成する" />
+  </form>
+
+{% endblock %}
