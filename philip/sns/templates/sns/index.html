@@ -7,7 +7,7 @@
   {% if messages %}
   <ul>
     {% for message in messages %}
-    <li>{{message}}</li>
+    <li><div class="alert alert-info" role="alert">{{message|safe}}</div></li>
     {% endfor %}
   </ul>
   {% endif %}
@@ -34,7 +34,7 @@
   [Public]
   {% endif %}
   </div>
-  <div>{{item.content}}</div>
+  <div>{{item.content|safe}}</div>
   <div>{{item.pub_date}}</div>
 
   {% if item.share_id > 0 %}

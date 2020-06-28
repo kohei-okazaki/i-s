@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -10,7 +11,7 @@ class Message(models.Model):
     # グループ情報
     group = models.ForeignKey('Group', on_delete=models.CASCADE)
     # 投稿内容
-    content = models.TextField(max_length=200)
+    content = models.TextField(max_length=1000)
     # share時のID
     share_id = models.IntegerField(default=-1)
     # いいね数
@@ -23,7 +24,7 @@ class Message(models.Model):
     reg_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.content) + ' (' + str(self.owner) + ')'
+        return str(self.content) + ' (投稿者=' + str(self.owner) + ')'
 
     def get_share(self):
         return Message.objects.get(id=self.share_id)

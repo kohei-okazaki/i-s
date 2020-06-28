@@ -3,9 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from sns import util
+from sns.dao.good_dao import GoodDao
+from sns.dao.group_dao import GroupDao
+from sns.dao.message_dao import MessageDao
 from sns.form import SearchForm, GroupCheckboxForm, GroupSelectForm, FriendCheckboxForm, CreateGroupForm, PostForm
 from sns.models import Group, Friend, Message, Good
-from sns import util
 
 
 @login_required(login_url='/admin/login/')
@@ -43,7 +46,7 @@ def index(request):
             check_form = GroupCheckboxForm(request.user)
 
             # Groupのリストを取得
-            group_entity_list = Group.objects.filter(owner=request.user)
+            group_entity_list = GroupDao().select_list_by_owner(request.user)
             glist = [public_group]
             for entity in group_entity_list:
                 glist.append(entity)
@@ -57,7 +60,7 @@ def index(request):
         check_form = GroupCheckboxForm(request.user)
 
         # Groupリストの取得
-        group_entity_list = Group.objects.filter(owner=request.user)
+        group_entity_list = GroupDao().select_list_by_owner(request.user)
         group_list = [public_group]
         for entity in group_entity_list:
             group_list.append(entity)
@@ -95,7 +98,7 @@ def groups(request):
             select_group = request.POST['groups']
 
             # Groupを取得
-            group_entity = Group.objects.filter(owner=request.user).filter(title=select_group).first()
+            group_entity = GroupDao().select_list_by_owner_and_title(request.user, select_group).first()
 
             # Groupに含まれるFriendを取得
             friend_entity_list = Friend.objects.filter(owner=request.user).filter(group=group_entity)
@@ -113,8 +116,9 @@ def groups(request):
         if request.POST['mode'] == '__friends_form__':
 
             # 選択したGroupの取得
-            select_group = request.POST['groups']
-            group_entity = Group.objects.filter(title=select_group).first()
+            select_group = request.POST['group']
+            print("select_group->" + str(select_group))
+            group_entity = GroupDao().select_list_by_title(select_group).first()
 
             # チェックしたFriendsを取得
             select_friends = request.POST.getlist('friends')
@@ -122,7 +126,7 @@ def groups(request):
             # Friendsのユーザを取得
             select_users = User.objects.filter(username__in=select_friends)
 
-            # userのリストに含まれるユーザが登録したFriendを取得
+            # Userのリストに含まれるユーザが登録したFriendを取得
             fds = Friend.objects.filter(owner=request.user).filter(user__in=select_users)
 
             # すべてのFriendにGroupを設定し保存する
@@ -162,7 +166,7 @@ def groups(request):
 @login_required(login_url='/admin/login/')
 def add(request):
     '''
-    User追加画面の処理
+    User追加取得処理
     @param request リクエスト情報
     '''
 
@@ -193,7 +197,7 @@ def add(request):
     friend_entity.save()
 
     # メッセージの設定
-    messages.info(request, add_user.username + "を追加しました。 groupページに移動して追加したFriendをメンバーに設定してください")
+    messages.info(request, add_user.username + "を追加しました。<br>グループ管理ページに移動して追加したFriendをメンバーに設定してください")
     return redirect(to='/sns')
 
 
@@ -208,7 +212,7 @@ def creategroup(request):
     group_entity = Group()
     group_entity.owner = request.user
     group_entity.title = request.POST['group_name']
-    group_entity.save()
+    GroupDao().insert(group_entity)
 
     messages.info(request, '新しいグループを作成しました')
 
@@ -229,7 +233,8 @@ def post(request):
         content = request.POST['content']
 
         # Groupの取得
-        group_entity = Group.objects.filter(owner=request.user).filter(title=group_name).first()
+        # group_entity = Group.objects.filter(owner=request.user).filter(title=group_name).first()
+        group_entity = GroupDao().select_list_by_owner_and_title(request.user, group_name).first()
 
         if group_entity == None:
             (public_user, group_entity) = util.get_public()
@@ -239,7 +244,7 @@ def post(request):
         message_entity.owner = request.user
         message_entity.group = group_entity
         message_entity.content = content
-        message_entity.save()
+        MessageDao().insert(message_entity)
 
         # メッセージを設定
         messages.success(request, '新しいメッセージを投稿しました')
@@ -264,7 +269,8 @@ def share(request, share_id):
     '''
 
     # シェアするMessageの取得
-    share_message = Message.objects.get(id=share_id)
+    # share_message = Message.objects.get(id=share_id)
+    share_message = MessageDao().select_by_id(share_id)
 
     # POST送信時の処理
     if 'POST' == request.method:
@@ -273,7 +279,8 @@ def share(request, share_id):
         content = request.POST['content']
 
         # Groupの取得
-        group_entity = Group.objects.filter(owner=request.user).filter(title=group_name).first()
+        # group_entity = Group.objects.filter(owner=request.user).filter(title=group_name).first()
+        group_entity = GroupDao().select_list_by_owner_and_title(request.user, group_name).first()
 
         if group_entity == None:
             (pub_user, group_entity) = util.get_public()
@@ -284,13 +291,18 @@ def share(request, share_id):
         message_entity.group = group_entity
         message_entity.content = content
         message_entity.share_id = share_message.id
-        message_entity.save()
+        MessageDao().insert(message_entity)
+
+        share_msg = message_entity.get_share()
+        share_msg.share_count += 1
+        share_msg.save()
 
         # 応答メッセージを設定
         messages.info(request, 'メッセージをシェアしました')
+
         return redirect(to='/sns')
 
-    form = PostForm()
+    form = PostForm(request.user)
     params = {
         'login_user': request.user,
         'form': form,
@@ -309,24 +321,23 @@ def good(request, good_id):
     '''
 
     # GoodするMESSAGEを取得
-    good_message = Message.objects.get(id=good_id)
+    good_message = MessageDao().select_by_id(good_id)
 
     # 自身がメッセージにgoodした数を調べる
-    is_good = Good.objects.filter(owner=request.user).filter(message=good_message).count()
+    is_good = GoodDao().count_by_owner_and_message(request.user, good_message)
     # 0より大きければ既にgood済
     if is_good > 0:
         messages.success(request, '既にメッセージにGoodしています')
         return redirect(to='/sns')
 
     # Messageのgood数をインクリメント
-    good_message.good_count += 1
-    good_message.save()
+    MessageDao().increment(good_message)
 
     # Goodを作成
     good = Good()
     good.owner = request.user
     good.message = good_message
-    good.save()
+    GoodDao().insert(good)
 
     # 応答メッセージを設定
     messages.success(request, 'メッセージにGoodしました')
