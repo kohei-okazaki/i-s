@@ -1,0 +1,63 @@
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.header-contents {
+  background-color: #e4e4e4;
+}
+
+.footer-contents {
+  color: white;
+  padding: 5px;
+  background-color: #808080;
+}
+
+/*
+ * Bootstrapの.rowが左右 -15pxとなっているので
+ *左右0pxでラッピングしたrow
+ */
+.row {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
+/*
+ * <p>タグ等が下方向にpaddingされているものがあったため、このタグで無理やりPaddingをさせないようにする
+ */
+.zero-margin {
+  margin: 0px !important;
+}
+
+/*
+ * リストメニューのPaddingを調整
+ */
+.sns-list-menu-item {
+  padding-top: 1.25rem;
+  padding-right: 2.25rem;
+  padding-bottom: 1.25rem;
+  padding-left: 2.25rem;
+}
+
+/**
+ * 各機能の画面の余白を調整
+ */
+.main-content {
+  margin: 1.00rem;
+  padding: 1.00rem;
+}
+
+/* ボタンの種類を追加 */
+.btn-black {
+  background-color: #000 !important;
+  color: #fff;
+}
+
+.btn-olive {
+  background-color: olive; ! important;
+  color: #fff;
+}
+
+.btn-orange {
+  background-color: orange !important;
+  color: #000;
+}

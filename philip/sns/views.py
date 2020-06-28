@@ -246,7 +246,7 @@ def post(request):
         return redirect(to='/sns')
 
     # GETアクセス時の処理
-    form = PostForm()
+    form = PostForm(request.user)
 
     params = {
         'login_user': request.user,

@@ -1,28 +1,51 @@
-{% load static %}
-<!DOCTYPE HTML>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'common/css/bootstrap.min.css' %}" /> -->
-</head>
-<body>
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <p>SNS</p>
-        <ul>
-        </ul>
-      </div><!-- /.card -->
-    </div><!-- /.col -->
-  </div><!-- /.row -->
-  <div class="row">
-    <div class="col">
-      <div class="card">
-      </div><!-- /.card -->
-    </div><!-- /.col -->
-  </div><!-- /.row -->
-  <!-- gotoの値はurlpatterns で指定したnameの値を設定するとその関数が呼ばれるリンクになる -->
-</div><!-- /.container -->
-</body>
-</html>
+{% extends 'sns/layout.html' %}
+
+{% block title %}Index画面{% endblock %}
+
+{% block content %}
+
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{message}}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <form action="{% url 'index' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="mode" value="__search_form__">
+    {{search_form}}
+    <input class="btn btn-primary" type="submit" value="検索" />
+  </form>
+
+  <hr>
+  <div>※グループのチェックをつけて更新すると、そのグループに登録されている利用者のメッセージだけが表示されます</div>
+  <form action="{% url 'index' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="mode" value="__check_form__">
+    {{check_form}}
+    <input class="btn btn-primary" type="submit" value="更新" />
+  </form>
+
+  {% for item in contents %}
+  <hr>
+  <div>
+  {% if item.group.title == 'public' %}
+  [Public]
+  {% endif %}
+  </div>
+  <div>{{item.content}}</div>
+  <div>{{item.pub_date}}</div>
+
+  {% if item.share_id > 0 %}
+    <div>{{item.get_share}}</div>
+  {% endif %}
+
+  <div>Share:{{item.share_count}} / Good:{{item.good_count}}</div>
+  <br>
+  <div>Share:{{item.owner}} (<a href="{% url 'add' %}?name={{item.owner}}">友達追加</a>)</div>
+  <a href="{% url 'share' item.id %}">Share</a>
+  <a href="{% url 'good' item.id %}">Good!!!</a>
+
+  {% endfor %}
+{% endblock %}

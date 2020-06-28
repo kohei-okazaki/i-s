@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/layout.css' %}" />
+</head>
+<body>
+
+
+  <!-- ヘッダー -->
+  <header class="sticky-top header-contents">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <h1 class="text-muted zero-margin">Philip</h1>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">ログインユーザ:{{login_user}}</a>
+          </li><!-- /.nav-item -->
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/logout?next=/sns/">ログアウト</a>
+          </li><!-- /.nav-item -->
+        </ul><!-- /.navbar-nav -->
+      </div><!-- /.collapse navbar-collapse justify-content-end -->
+    </nav><!-- /.navbar navbar-expand-sm navbar-dark bg-dark -->
+  </header><!-- /.sticky-top header-contents -->
+
+  <!-- メインコンテンツ -->
+  <div class="content">
+    <div class="content-wrapper">
+      <div class="row">
+        <div class="col-xs-4">
+          <div class="list-group">
+            <a href="{% url 'index' %}" class="list-group-item sns-list-menu-item">Top</a>
+            <a href="{% url 'post' %}" class="list-group-item sns-list-menu-item">投稿</a>
+            <a href="{% url 'groups' %}" class="list-group-item sns-list-menu-item">グループ管理</a>
+          </div><!-- /.list-group -->
+        </div><!-- /.col-xs-4 -->
+        <div class="col-xs-8">
+          <section class="main-content">
+            <!-- 各画面個別で差し替えるエリア -->
+            {% block content %}{% endblock %}
+          </section><!-- /.content -->
+        </div><!-- /.col-xs-8 -->
+      </div><!-- /.row -->
+    </div><!-- /.content-wrapper -->
+  </div><!-- /.content -->
+
+</body>
+</html>

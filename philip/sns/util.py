@@ -30,7 +30,7 @@ def get_your_group_message(owner, group_list, find=None):
         users.append(entity.user)
 
     # UserリストのUserが作ったGroupの取得
-    user_group_entity_list = Group.objects.filter(owner=users)
+    user_group_entity_list = Group.objects.filter(owner__in=users)
     user_friend_entity_list = Friend.objects.filter(user=owner)\
                                     .filter(group__in=user_group_entity_list)
 
