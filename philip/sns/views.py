@@ -113,6 +113,7 @@ def groups(request):
         if request.POST['mode'] == '__friends_form__':
 
             # 選択したGroupの取得
+#             select_group = request.POST['group']
             select_group = request.POST['groups']
             group_entity = Group.objects.filter(title=select_group).first()
 
@@ -162,7 +163,7 @@ def groups(request):
 @login_required(login_url='/admin/login/')
 def add(request):
     '''
-    User追加画面の処理
+    User追加取得処理
     @param request リクエスト情報
     '''
 
@@ -286,11 +287,15 @@ def share(request, share_id):
         message_entity.share_id = share_message.id
         message_entity.save()
 
+        share_msg = message_entity.get_share()
+        share_msg.share_count += 1
+        share_msg.save()
+
         # 応答メッセージを設定
         messages.info(request, 'メッセージをシェアしました')
         return redirect(to='/sns')
 
-    form = PostForm()
+    form = PostForm(request.user)
     params = {
         'login_user': request.user,
         'form': form,
