@@ -2,11 +2,13 @@
 ## 1.Anacondaをインストール  
 https://www.anaconda.com/products/individual から64Bit版をDLし、解凍  
  「Anaconda Prompt」を起動  
- 以下のコマンドを実行
+ 以下のコマンドを実行  
 >conda update conda  
 >conda update --all  
 >conda install django  
 >conda install sqlparse  
+pip install django-widget-tweaks  
+>conda install mysqlclient  
 
 ## 2.EclipseのDjango環境構築手順  
 Eclipse を解凍  
